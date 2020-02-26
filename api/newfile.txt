@@ -1,0 +1,1 @@
+{"data":{"Success":"1","Message":"Please verify your phone number","captain_status":"None","currency_sign":"$","stripe_currency":"usd","stripe_secret_key":"sk_test_OmHns3GqAL2D0ERZcy481lpY00jD1V80yB","stripe_publish_key":"pk_test_qAatcJFi3oeP1pX2Lq5JjLfh00wzReJyMb","google_api_key":"AIzaSyDP05tJPZ0sgMIMmqJyC4SKUThpdUi3-ZM"}}

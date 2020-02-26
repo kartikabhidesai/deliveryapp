@@ -1,0 +1,7 @@
+#Per request, this file was created_on by A2 Hosting support to showcase the two main ways of displaying a non-403 page when this URL is accessed.
+
+#This rule, when uncommented, will list the directory contents if https://www.adhman.com/app/api/ is accessed.
+#Options +Indexes
+
+#This rule, when uncommented, will display adhman.txt if https://www.adhman.com/app/api/ is accessed.
+#DirectoryIndex adhman.txt
