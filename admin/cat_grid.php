@@ -16,7 +16,7 @@ $columns = array(
 // getting total number records without any search
 $sql = "SELECT *";
 $sql .= " FROM tbl_category";
-$query = mysqli_query($dbConn, $sql) or die("cat_grid.php: get products");
+$query = mysqli_query($dbConn, $sql) or die("cat_grid.php: get category");
 $totalData = mysqli_num_rows($query);
 $totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
 
@@ -39,7 +39,7 @@ $i = 1 + $requestData['start'];
 while ($row = mysqli_fetch_array($query)) {  // preparing an array
     
         $currStatus = ($row['is_active']=="1")?"Active":"Deactive";
-	$editurl = "cat_edit.php" . $urltoadd . ($urltoadd != "" ? "&id=" . $row["id"] : "?id=" . $row["id"]);
+	$editurl = "cat_edit.php" . $urltoadd . ($urltoadd != "" ? "&id=" . $converter->encode($row["id"]) : "?id=" . $converter->encode($row["id"]));
 	$encodedId = $row["id"];
         $nestedData = array();
 

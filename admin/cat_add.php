@@ -35,10 +35,10 @@ $dbfunction1 = new dbfunctions();
 // $pagingobj = new paging("tbl_parking_contacts", "*", $where, $orderby, "", $defaultpaging, DEFAULT_PAGING_SHOW);
 // echo $pagingobj->sql;
 //$dbfunction1->SimpleSelectQuery($pagingobj->sql);
-$Query = "SELECT * FROM `tbl_users`";
+//$Query = "SELECT * FROM `tbl_users`";
 //echo "SELECT * FROM tbl_sale_garage WHERE  sale_startdate<=$cur and sale_enddate>=$cur ORDER BY sale_id DESC LIMIT 5";
-$dbfunction1->SimpleSelectQuery($Query);
-$totalsaledisplay = $dbfunction1->getNumRows();
+//$dbfunction1->SimpleSelectQuery($Query);
+//$totalsaledisplay = $dbfunction1->getNumRows();
 ?>
 <?php
 if (isset($_POST["save"]) && $_POST["save"] != "") {
@@ -94,11 +94,11 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
                         <!-- Begin page heading -->
                         <h1 class="page-heading">Category List <small></small></h1>
                         <!-- End page heading -->
-
+                        <!--<span class="pull-right" ><a href="cat_view.php" class="btn btn-icon btn-primary glyphicons" title="View Category"><i class="icon-plus-sign"></i>View Category</a></span>-->
                         <!-- Begin breadcrumb -->
                         <ol class="breadcrumb default square rsaquo sm">
                             <li><a href="dashboard.php"><i class="fa fa-home"></i></a></li>
-                            <li><a href="cat_add.php">Add Categoty</a></li>
+                            <li><a href="cat_list.php">Categoty List</a></li>
                             <li>Add</li>
                         </ol>
                         <?php
@@ -124,7 +124,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">Category Name:</label>
                                         <div class="col-lg-5">
-                                            <input type="text" class="form-control" name="cat_name" value="<?php echo (isset($not_type_title) ? $not_type_title : ""); ?>" placeholder="Enter Category Name" required />
+                                            <input type="text" class="form-control" name="cat_name" value="" placeholder="Enter Category Name" required />
                                         </div>
                                         <span class="errorstar">&nbsp;*</span>
                                     </div>
@@ -136,7 +136,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
                                         <div class="col-lg-9 col-lg-offset-3">
 
                                             <button type="submit" name="save" id="save" value="submit" class="btn btn-primary" title="Save">Save</button>
-                                            <span class="span2"><button type="button" onClick="javascript: window.location.href = 'not_type_list.php<?php echo $cancelurl; ?>'" class="btn btn-primary" title="Cancel">Cancel</button></span>
+                                            <span class="span2"><button type="button" onClick="javascript: window.location.href = 'cat_list.php<?php echo $cancelurl; ?>'" class="btn btn-primary" title="Cancel">Cancel</button></span>
                                         </div>
                                     </div>
 
@@ -154,7 +154,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
         </div>
     </body>
     <!--Code for POPUP Dialog Box-->
-    <div id="dialog" title="Contact"></div>
+<!--    <div id="dialog" title="Contact"></div>
     <script language="javascript">
         $(function () {
             $('#err').fadeOut(5000);
@@ -167,13 +167,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
             });
 
         });
-    </script>
-    <?php if (isset($_SESSION['login_suc'])) { ?>
-        <script> getMessage("loggedin", "Login Successfully");</script>
-        <?php
-        unset($_SESSION['login_suc']);
-    }
-    ?>
+    </script>-->
     <!--Code for POPUP Dialog Box-->
     <!--Code for POPUP Dialog Box-->
 

@@ -8,7 +8,7 @@ session_regenerate_id(true);
 $generalFunction = new generalfunction();
 $dbfunction = new dbfunctions();
 
-$dbfunction->SimpleSelectQuery("select * from tbl_category where id=" . $_GET['id']);
+$dbfunction->SimpleSelectQuery("select * from tbl_category where id=" . $converter->decode($_GET['id']));
 $objsel = $dbfunction->getFetchArray();
 
 $pagename = "cat_edit";
@@ -46,7 +46,7 @@ $totalsaledisplay = $dbfunction1->getNumRows();
 <?php
 if (isset($_POST["update"]) && $_POST["update"] != "") {
 
-    $id = $_GET['id'];
+    $id = $converter->decode($_GET['id']);
     $updatearray = array("name" => $_POST['cat_name']);
     $dbfunction->UpdateQuery("tbl_category", $updatearray, "id='" . $id . "'");
     $urltoredirect = "cat_list.php?suc=" . $converter->encode("1");
