@@ -146,29 +146,4 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
         <?php include("js-css-footer.php"); ?>
     </body>
     <!--Code for POPUP Dialog Box-->
-    <div id="dialog" title="Contact"></div>
-    <script language="javascript">
-        $(function () {
-            $('#err').fadeOut(5000);
-            $('.dialog_link').click(function () {
-                $('#dialog').dialog('open');
-                var val = $(this).attr("id");
-                $('#dialog').load("contact_view.php?id=" + val);
-
-                return false;
-            });
-
-        });
-    </script>
-    <?php if (isset($_SESSION['login_suc'])) { ?>
-        <script> getMessage("loggedin", "Login Successfully");</script>
-        <?php
-        unset($_SESSION['login_suc']);
-    }
-    ?>
-    <!--Code for POPUP Dialog Box-->
-    <!--Code for POPUP Dialog Box-->
-
-
-    <!--Code for POPUP Dialog Box-->
 </html>

@@ -6,9 +6,12 @@ $converter = new encryption();
 session_regenerate_id(true);
 // a5b9bd37ae7343383976a1b5c90ee3fb 
 $generalFunction = new generalfunction();
-
-$pagename = "cat_add";
 $dbfunction = new dbfunctions();
+
+$dbfunction->SimpleSelectQuery("select * from tbl_variant where id=" . $converter->decode($_GET['id']));
+$objsel = $dbfunction->getFetchArray();
+
+$pagename = "variant_edit";
 
 /* lateget data start */
 $dbfunction3 = new dbfunctions();
@@ -41,20 +44,13 @@ $dbfunction1 = new dbfunctions();
 //$totalsaledisplay = $dbfunction1->getNumRows();
 ?>
 <?php
-if (isset($_POST["save"]) && $_POST["save"] != "") {
+if (isset($_POST["update"]) && $_POST["update"] != "") {
 
-    $name = $_POST["cat_name"];
-    $dbfunction->SelectQuery("tbl_category", "tbl_category.name", "name ='$name' AND is_deleted='0'");
-    $objsel = $dbfunction->getFetchArray();
-
-    if ($objsel["name"] != "") {
-        $error1 = "1";
-        $errormessage1 = "Category Already Exist";
-    } else {
-        $dbfunction->InsertQuery("tbl_category", array("name" => $name));
-        $urltoredirect = "cat_list.php?suc=" . $converter->encode("4");
-        $generalFunction->redirect($urltoredirect);
-    }
+    $id = $converter->decode($_GET['id']);
+    $updatearray = array("variant_name" => $_POST['variant_name']);
+    $dbfunction->UpdateQuery("tbl_variant", $updatearray, "id='" . $id . "'");
+    $urltoredirect = "variant_list.php?suc=" . $converter->encode("1");
+    $generalFunction->redirect($urltoredirect);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -66,7 +62,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
     <head><script language=javascript></script><script language=javascript></script>
 
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $lang["charset"]; ?>" />
-        <title><?php echo "Dashboard :: Admin :: " . SITE_NAME; ?></title>
+        <title><?php echo "Variant :: Admin :: " . SITE_NAME; ?></title>
         <link rel="shortcut icon" type="image/x-con" href="images/Logo1.ico" />
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
@@ -92,20 +88,15 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
 
                     <div class="container-fluid">
                         <!-- Begin page heading -->
-                        <h1 class="page-heading">Category List <small></small></h1>
+                        <h1 class="page-heading">Variant List <small></small></h1>
                         <!-- End page heading -->
-                        <span class="pull-right" ><a href="cat_list.php" class="btn btn-icon btn-primary glyphicons" title="View Category"><i class="icon-plus-sign"></i>View Category</a></span>
+
                         <!-- Begin breadcrumb -->
                         <ol class="breadcrumb default square rsaquo sm">
                             <li><a href="dashboard.php"><i class="fa fa-home"></i></a></li>
-                            <li><a href="cat_list.php">Categoty List</a></li>
-                            <li>Add</li>
+                            <li><a href="variant_list.php">Variant List</a></li>
+                            <li>Edit</li>
                         </ol>
-                        <?php
-                        if (isset($error1) && $error1 == "1") {
-                            echo $generalFunction->getErrorMessage($errormessage1);
-                        }
-                        ?>
                         <!-- End breadcrumb -->
 
                         <!-- BEGIN DATA TABLE -->
@@ -122,9 +113,9 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
                             <form  id="addCat" class="form-horizontal" enctype="multipart/form-data" name="addCat"  action="<?php echo $pageurl; ?>" method="post">
                                 <fieldset>
                                     <div class="form-group">
-                                        <label class="col-lg-3 control-label">Category Name:</label>
+                                        <label class="col-lg-3 control-label">Variant Name:</label>
                                         <div class="col-lg-5">
-                                            <input type="text" class="form-control" name="cat_name" value="" placeholder="Enter Category Name" required />
+                                            <input type="text" class="form-control" name="variant_name" value="<?php echo $objsel['variant_name']; ?>" placeholder="Enter Variant Name" required />
                                         </div>
                                         <span class="errorstar">&nbsp;*</span>
                                     </div>
@@ -135,11 +126,11 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
                                     <div class="form-group">
                                         <div class="col-lg-9 col-lg-offset-3">
 
-                                            <button type="submit" name="save" id="save" value="submit" class="btn btn-primary" title="Save">Save</button>
-                                            <span class="span2"><button type="button" onClick="javascript: window.location.href = 'cat_list.php<?php echo $cancelurl; ?>'" class="btn btn-primary" title="Cancel">Cancel</button></span>
+                                            <button type="submit" name="update" id="update" value="submit" class="btn btn-primary" title="Save">Update</button>
+                                            <span class="span2"><button type="button" onClick="javascript: window.location.href = 'variant_list.php<?php echo $cancelurl; ?>'" class="btn btn-primary" title="Cancel">Cancel</button></span>
                                         </div>
                                     </div>
-
+                                    <input type="hidden" name="id" id="id" value="<?php echo $objsel['id']; ?>" />
                                 </fieldset>
                             </form>
                             <!-- // Table END -->
@@ -152,25 +143,6 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
             </div><!-- /.wrapper -->
             <!-- END PAGE CONTENT -->
         </div>
+        <?php include("js-css-footer.php"); ?>
     </body>
-    <!--Code for POPUP Dialog Box-->
-<!--    <div id="dialog" title="Contact"></div>
-    <script language="javascript">
-        $(function () {
-            $('#err').fadeOut(5000);
-            $('.dialog_link').click(function () {
-                $('#dialog').dialog('open');
-                var val = $(this).attr("id");
-                $('#dialog').load("contact_view.php?id=" + val);
-
-                return false;
-            });
-
-        });
-    </script>-->
-    <!--Code for POPUP Dialog Box-->
-    <!--Code for POPUP Dialog Box-->
-
-
-    <!--Code for POPUP Dialog Box-->
 </html>

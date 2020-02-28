@@ -23,6 +23,14 @@ if ($pagename == "product_list" || $pagename == "product_add" || $pagename == "p
     $productcls = "";
 }
 
+if ($pagename == "variant_list" || $pagename == "variant_add" || $pagename == "variant_edit") {
+    $variantcls = " active selected";
+    $variantcls = " visible";
+} else {
+    $variantcls = "";
+    $variantcls = "";
+}
+
 if ($pagename == "cust_list" || $pagename == "add_cust") {
     $vendorCls = " active selected";
     $vendorCls1 = " visible";
@@ -113,6 +121,19 @@ if ($pagename == "sitesettings" || $pagename == "changepassword") {
             <ul class="submenu <?php echo $productcls; ?>">
                 <li <?php echo (($pagename == "product_list") ? ' class="selected"' : ""); ?>><a href="product_list.php" title="Product list">Product List</a></li>
                 <li <?php echo (($pagename == "product_add") ? ' class="selected"' : ""); ?>><a href="product_add.php" title="Add Product">Add Product</a></li>
+
+            </ul>
+        </li>
+        
+        <li class="<?php echo $variantcls; ?>">
+            <a href="#fakelink">
+                <i class="fa fa-th-list icon-sidebar"></i>
+                <i class="fa fa-angle-right chevron-icon-sidebar"></i>
+                Variant
+            </a>
+            <ul class="submenu <?php echo $variantcls; ?>">
+                <li <?php echo (($pagename == "variant_list") ? ' class="selected"' : ""); ?>><a href="variant_list.php" title="Variant list">Variant List</a></li>
+                <li <?php echo (($pagename == "variant_add") ? ' class="selected"' : ""); ?>><a href="variant_add.php" title="Add Variant">Add Variant</a></li>
 
             </ul>
         </li>

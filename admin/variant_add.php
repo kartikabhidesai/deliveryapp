@@ -7,7 +7,7 @@ session_regenerate_id(true);
 // a5b9bd37ae7343383976a1b5c90ee3fb 
 $generalFunction = new generalfunction();
 
-$pagename = "cat_add";
+$pagename = "variant_add";
 $dbfunction = new dbfunctions();
 
 /* lateget data start */
@@ -43,16 +43,16 @@ $dbfunction1 = new dbfunctions();
 <?php
 if (isset($_POST["save"]) && $_POST["save"] != "") {
 
-    $name = $_POST["cat_name"];
-    $dbfunction->SelectQuery("tbl_category", "tbl_category.name", "name ='$name' AND is_deleted='0'");
+    $name = $_POST["variant_name"];
+    $dbfunction->SelectQuery("tbl_variant", "tbl_variant.variant_name", "variant_name ='$name' AND is_deleted='0'");
     $objsel = $dbfunction->getFetchArray();
 
-    if ($objsel["name"] != "") {
+    if ($objsel["variant_name"] != "") {
         $error1 = "1";
-        $errormessage1 = "Category Already Exist";
+        $errormessage1 = "Variant Name Already Exist";
     } else {
-        $dbfunction->InsertQuery("tbl_category", array("name" => $name));
-        $urltoredirect = "cat_list.php?suc=" . $converter->encode("4");
+        $dbfunction->InsertQuery("tbl_variant", array("variant_name" => $name));
+        $urltoredirect = "variant_list.php?suc=" . $converter->encode("4");
         $generalFunction->redirect($urltoredirect);
     }
 }
@@ -66,7 +66,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
     <head><script language=javascript></script><script language=javascript></script>
 
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $lang["charset"]; ?>" />
-        <title><?php echo "Dashboard :: Admin :: " . SITE_NAME; ?></title>
+        <title><?php echo "Variant :: Admin :: " . SITE_NAME; ?></title>
         <link rel="shortcut icon" type="image/x-con" href="images/Logo1.ico" />
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
@@ -92,13 +92,13 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
 
                     <div class="container-fluid">
                         <!-- Begin page heading -->
-                        <h1 class="page-heading">Category List <small></small></h1>
+                        <h1 class="page-heading">Variant List<small></small></h1>
                         <!-- End page heading -->
-                        <span class="pull-right" ><a href="cat_list.php" class="btn btn-icon btn-primary glyphicons" title="View Category"><i class="icon-plus-sign"></i>View Category</a></span>
+                        <span class="pull-right" ><a href="variant_list.php" class="btn btn-icon btn-primary glyphicons" title="View Variant"><i class="icon-plus-sign"></i>View Variant</a></span>
                         <!-- Begin breadcrumb -->
                         <ol class="breadcrumb default square rsaquo sm">
                             <li><a href="dashboard.php"><i class="fa fa-home"></i></a></li>
-                            <li><a href="cat_list.php">Categoty List</a></li>
+                            <li><a href="cat_list.php">Variant List</a></li>
                             <li>Add</li>
                         </ol>
                         <?php
@@ -106,25 +106,14 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
                             echo $generalFunction->getErrorMessage($errormessage1);
                         }
                         ?>
-                        <!-- End breadcrumb -->
-
-                        <!-- BEGIN DATA TABLE -->
-                        <!--<div class="the-box">
-                                <div class="table-responsive">
-                                <table class="table table-striped table-hover" id="datatable-example">
-                                        <thead class="the-box dark full"></thead>
-                                        <tbody></tbody>
-                                </table>
-                                </div>
-                        </div>--><!-- /.the-box .default -->
-                        <!-- END DATA TABLE -->
+                        
                         <div class="the-box">
                             <form  id="addCat" class="form-horizontal" enctype="multipart/form-data" name="addCat"  action="<?php echo $pageurl; ?>" method="post">
                                 <fieldset>
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">Category Name:</label>
                                         <div class="col-lg-5">
-                                            <input type="text" class="form-control" name="cat_name" value="" placeholder="Enter Category Name" required />
+                                            <input type="text" class="form-control" name="variant_name" value="" placeholder="Enter Variant Name" required />
                                         </div>
                                         <span class="errorstar">&nbsp;*</span>
                                     </div>
