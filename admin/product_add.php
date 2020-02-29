@@ -52,10 +52,11 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
             if (!move_uploaded_file($tmp_file, $original)) {
                 echo $Messages = "File not uploaded";
                 exit;
-            } else {
-                createthumb($original, $path . '30/' . $image, 30, 30);
-                //createthumb($original, $path.'80/'.$not_type_icon,80,80);
-            }
+            } 
+//            else {
+//                createthumb($original, $path . '30/' . $image, 30, 30);
+//                //createthumb($original, $path.'80/'.$not_type_icon,80,80);
+//            }
         }
         return $image;
     }
@@ -64,7 +65,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
     $hdn_image = $_POST['hdn_image'];
     $image = ProcessedImage($profileimage, "product");
 //      $image = 'download.jpg';
-
+//    echo $image; exit();
     $dbfunction->SelectQuery("tbl_product", "product_name", "product_name ='$prod_name' AND is_deleted='0'");
     $objsel = $dbfunction->getFetchArray();
 
