@@ -92,7 +92,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
 
                     <div class="container-fluid">
                         <!-- Begin page heading -->
-                        <h1 class="page-heading">Variant List<small></small></h1>
+                        <h1 class="page-heading">Variant Add<small></small></h1>
                         <!-- End page heading -->
                         <span class="pull-right" ><a href="variant_list.php" class="btn btn-icon btn-primary glyphicons" title="View Variant"><i class="icon-plus-sign"></i>View Variant</a></span>
                         <!-- Begin breadcrumb -->

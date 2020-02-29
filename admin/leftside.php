@@ -31,6 +31,14 @@ if ($pagename == "variant_list" || $pagename == "variant_add" || $pagename == "v
     $variantcls = "";
 }
 
+if ($pagename == "item_list" || $pagename == "item_add" || $pagename == "item_edit") {
+    $itemcls = " active selected";
+    $itemcls = " visible";
+} else {
+    $itemcls = "";
+    $itemcls = "";
+}
+
 if ($pagename == "cust_list" || $pagename == "add_cust") {
     $vendorCls = " active selected";
     $vendorCls1 = " visible";
@@ -134,6 +142,19 @@ if ($pagename == "sitesettings" || $pagename == "changepassword") {
             <ul class="submenu <?php echo $variantcls; ?>">
                 <li <?php echo (($pagename == "variant_list") ? ' class="selected"' : ""); ?>><a href="variant_list.php" title="Variant list">Variant List</a></li>
                 <li <?php echo (($pagename == "variant_add") ? ' class="selected"' : ""); ?>><a href="variant_add.php" title="Add Variant">Add Variant</a></li>
+
+            </ul>
+        </li>
+        
+        <li class="<?php echo $itemcls; ?>">
+            <a href="#fakelink">
+                <i class="fa fa-sitemap icon-sidebar"></i>
+                <i class="fa fa-angle-right chevron-icon-sidebar"></i>
+                Item
+            </a>
+            <ul class="submenu <?php echo $itemcls; ?>">
+                <li <?php echo (($pagename == "item_list") ? ' class="selected"' : ""); ?>><a href="item_list.php" title="Item list">Item List</a></li>
+                <li <?php echo (($pagename == "item_add") ? ' class="selected"' : ""); ?>><a href="item_add.php" title="Add Item">Add Item</a></li>
 
             </ul>
         </li>
