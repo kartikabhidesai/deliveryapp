@@ -7,6 +7,12 @@ require_once('include/thumb.php');
 $conn=new Database;
 $data = new DataManipulator;
 
+function show_output1($str){
+	$outputjson['data'] = $str;
+	echo json_encode($outputjson);
+	exit;
+}
+
 function show_output($str){
 	
 	if(isset($_REQUEST['user_id']) && $_REQUEST['user_id']!="")
