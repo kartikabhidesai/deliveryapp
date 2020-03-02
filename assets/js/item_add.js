@@ -5,6 +5,7 @@ function item_selected(value) {
         $('#item_price_'+value).prop('disabled', false);
         
     } else {
+        $('#item_price_'+value).val('');
         $('#item_price_'+value).prop('disabled', true);
     }
 }

@@ -18,18 +18,68 @@ $query = mysqli_query($dbConn, $sql) or die("tbl_variant.php: get variant");
 if (isset($_POST["save"]) && $_POST["save"] != "") {
 
     $item_name = $_POST["item_name"];
-    print_r($_REQUEST);die();
-    
-    $dbfunction->SelectQuery("tbl_variant", "tbl_variant.variant_name", "variant_name ='$name' AND is_deleted='0'");
+    $count = count($_POST['item']);
+
+    $dbfunction->SelectQuery("tbl_item", "tbl_item.item_name", "item_name ='$item_name' AND is_deleted='0'");
     $objsel = $dbfunction->getFetchArray();
 
-    if ($objsel["variant_name"] != "") {
+    function ProcessedImage($image, $fieldname) {
+
+        global $generalFunction;
+        if ($generalFunction->validAttachment($image)) {
+            ini_set('max_execution_time', '999999');
+            $orgfile_name = $image;
+            $image = $_FILES[$fieldname]['size'];
+            $ext1 = $generalFunction->getExtention($orgfile_name);
+            $file_name = $generalFunction->getFileName($orgfile_name);
+            $new_filename = $generalFunction->validFileName($file_name);
+            $tmp_file = $_FILES[$fieldname]['tmp_name'];
+            $image = $new_filename . time() . "." . $ext1;
+            if ($fieldname == "item") {
+                $original = "../uploads/item/" . $image;
+                $path = "../uploads/item/";
+            }
+            $size = 112097152;
+            if ($image > $size) {
+                echo $Messages = "File Size should not be more than 2 mb";
+                exit;
+            }
+            //     echo $tmp_file.'=='.$original; exit();
+            if (!move_uploaded_file($tmp_file, $original)) {
+                echo $Messages = "File not uploaded";
+                exit;
+            }
+//            else {
+//                createthumb($original, $path . '30/' . $image, 30, 30);
+//                //createthumb($original, $path.'80/'.$not_type_icon,80,80);
+//            }
+        }
+        return $image;
+    }
+
+//
+    $profileimage = $_FILES['image']['name'];+
+    $hdn_image = $_POST['hdn_image'];
+    $image = ProcessedImage($profileimage, "item");
+
+    if ($objsel["item_name"] != "") {
         $error1 = "1";
-        $errormessage1 = "Variant Name Already Exist";
+        $errormessage1 = "Item Name Already Exist";
     } else {
-//        $dbfunction->InsertQuery("tbl_variant", array("variant_name" => $name));
-//        $urltoredirect = "variant_list.php?suc=" . $converter->encode("4");
-//        $generalFunction->redirect($urltoredirect);
+        $dbfunction->InsertQuery("tbl_item", array("item_name" => $item_name, "item_image" => $image, "create_date" => date('Y-m-d H:i:s')));
+        $sql = "SELECT id";
+        $sql .= " FROM tbl_item ORDER BY id DESC LIMIT 1";
+        $query = mysqli_query($dbConn, $sql) or die("tbl_item.php: get item");
+        while ($row = mysqli_fetch_array($query)) {
+            $last_id = $row['id'];
+        }
+        $i = 0;
+        while ($i < $count) {
+            $dbfunction->InsertQuery("tbl_item_size_price", array("item_id" => $last_id, "item_size" => $_REQUEST['item'][$i], "item_price" => $_REQUEST['item_price'][$i], "create_date" => date('Y-m-d H:i:s')));
+            $i++;
+        }
+        $urltoredirect = "item_list.php?suc=" . $converter->encode("4");
+        $generalFunction->redirect($urltoredirect);
     }
 }
 ?>
@@ -39,7 +89,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
     <script language=javascript></script><script language=javascript></script>
 
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $lang["charset"]; ?>" />
-    <title><?php echo "Variant :: Admin :: " . SITE_NAME; ?></title>
+    <title><?php echo "Item :: Admin :: " . SITE_NAME; ?></title>
     <link rel="shortcut icon" type="image/x-con" href="images/Logo1.ico" />
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
@@ -92,11 +142,11 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
                                         <?php while ($row = mysqli_fetch_array($query)) { ?>
                                             <div class="row">
                                                 <div class="col-lg-3">
-                                                    <input type='checkbox'  class='item_seleteded' id="item_<?php echo $row['id']; ?>" name="item_<?php echo $row['id']; ?>" value="<?php echo $row['id']; ?>" onclick="item_selected(<?php echo $row['id']; ?>)"/>
+                                                    <input type='checkbox'  class='item_seleteded' id="item_<?php echo $row['id']; ?>" name="item[]" value="<?php echo $row['id']; ?>" onclick="item_selected(<?php echo $row['id']; ?>)"/>
                                                     <span><?php echo $row['variant_name']; ?></span>
                                                 </div>
                                                 <div class="col-lg-9">
-                                                    <input type="text" class="form-control textbox" id="item_price_<?php echo $row['id']; ?>" name="item_price_<?php echo $row['id']; ?>" value="" placeholder="Enter Price" required  disabled="disabled"/>
+                                                    <input type="text" class="form-control textbox" id="item_price_<?php echo $row['id']; ?>" name="item_price[]" value="" placeholder="Enter Price" required  disabled="disabled"/>
                                                 </div>
                                             </div>
                                             <br>

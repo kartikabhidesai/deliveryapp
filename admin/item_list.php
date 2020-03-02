@@ -78,7 +78,6 @@ $dbfunction = new dbfunctions();
                                         <th>Item Name</th>
                                         <th>Item size</th>
                                         <th>Item price</th>
-                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

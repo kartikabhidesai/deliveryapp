@@ -25,7 +25,7 @@ $sql = "SELECT tbl_product.*, tbl_category.name";
 $sql.=" FROM tbl_product INNER JOIN tbl_category ON tbl_category.id=tbl_product.cat_id WHERE tbl_product.is_deleted='0'";
 if (!empty($requestData['search']['value'])) {   // if there is a search parameter, $requestData['search']['value'] contains search parameter
     $sql .= " AND ( name LIKE '" . $requestData['search']['value'] . "%' ";
-    $sql .= " OR name LIKE '" . $requestData['search']['value'] . "%' )";
+    $sql .= " OR ( name LIKE '" . $requestData['search']['value'] . "%' )";
     //$sql.=" OR prdUnitPrice LIKE '".$requestData['search']['value']."%' )";
 }
 $query = mysqli_query($dbConn, $sql) or die("product_grid.php: search products");
