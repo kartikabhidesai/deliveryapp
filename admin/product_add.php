@@ -73,7 +73,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
         $error1 = "1";
         $errormessage1 = "Product Name Already Exist";
     } else {
-        $dbfunction->InsertQuery("tbl_product", array("cat_id" => $category, "product_name" => $prod_name, "address" => $address, "mobile" => $mobile, "image" => $image));
+        $dbfunction->InsertQuery("tbl_product", array("cat_id" => $category, "product_name" => $prod_name, "address" => $address, "mobile" => $mobile, "image" => $image, "create_date" => date('Y-m-d H:i:s')));
         $urltoredirect = "product_list.php?suc=" . $converter->encode("4");
         $generalFunction->redirect($urltoredirect);
     }

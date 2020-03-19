@@ -40,6 +40,7 @@ while ($row = mysqli_fetch_array($query)) {  // preparing an array
     
         $currStatus = ($row['is_active']=="1")?"Active":"Deactive";
 	$editurl = "product_edit.php" . $urltoadd . ($urltoadd != "" ? "&id=" . $converter->encode($row["id"]) : "?id=" . $converter->encode($row["id"]));
+	$additem = "item_list.php" . $urltoadd . ($urltoadd != "" ? "&id=" . $converter->encode($row["id"]) : "?id=" . $converter->encode($row["id"]));
 	$encodedId = $row["id"];
         $nestedData = array();
 
@@ -58,7 +59,7 @@ while ($row = mysqli_fetch_array($query)) {  // preparing an array
                               <li><a onclick=updateStatus('".$encodedId."','deactive') >Deactive</a></li>
                         </ul>
                       </div>";
-	$nestedData[] = '<a class="ViewDialog btn btn-xs btn-success" data-id="'.$row["id"].'" href="#viewModel" data-toggle="modal">View</a>
+	$nestedData[] = '<a href="'.$additem.'" class="btn btn-xs btn-success" data-id="'.$row["id"].'">Item</a>
 	<a href="'.$editurl.'" title="Edit" ><button class="btn btn-xs btn-success">Edit</button></a>
 	<a data-id="'.$encodedId.'" class="btnDelete btn btn-xs btn-danger" >Delete</a>';
 

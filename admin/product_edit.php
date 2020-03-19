@@ -30,51 +30,52 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
     $address = $_POST["address"];
     $mobile = $_POST["mobile"];
 
-//    function ProcessedImage($image, $fieldname) {
-//        global $generalFunction;
-//        if ($generalFunction->validAttachment($image)) {
-//            ini_set('max_execution_time', '999999');
-//            $orgfile_name = $image;
-//            $image = $_FILES[$fieldname]['size'];
-//            $ext1 = $generalFunction->getExtention($orgfile_name);
-//            $file_name = $generalFunction->getFileName($orgfile_name);
-//            $new_filename = $generalFunction->validFileName($file_name);
-//            $tmp_file = $_FILES[$fieldname]['tmp_name'];
-//            $image = $new_filename . date('Y-m-d H:i:s') . "." . $ext1;
-//            if ($fieldname == "image") {
-//                $original = "../uploads/product/" . $image;
-//                $path = "../uploads/product/";
-//            }
-//            $size = 112097152;
-//            if ($image > $size) {
-//                echo $Messages = "File Size should not be more than 2 mb";
-//                exit;
-//            }
-//            if (!move_uploaded_file($tmp_file, $original)) {
-//                echo $Messages = "File not uploaded";
-//                exit;
-//            } else {
+function ProcessedImage($image, $fieldname) {
+       
+        global $generalFunction;
+        if ($generalFunction->validAttachment($image)) {
+            ini_set('max_execution_time', '999999');
+            $orgfile_name = $image;
+            $image = $_FILES[$fieldname]['size'];
+            $ext1 = $generalFunction->getExtention($orgfile_name);
+            $file_name = $generalFunction->getFileName($orgfile_name);
+            $new_filename = $generalFunction->validFileName($file_name);
+            $tmp_file = $_FILES[$fieldname]['tmp_name'];
+            $image = $new_filename . time() . "." . $ext1;
+            if ($fieldname == "product") {
+                $original = "../uploads/product/" . $image;
+                $path = "../uploads/product/";
+            }
+            $size = 112097152;
+            if ($image > $size) {
+                echo $Messages = "File Size should not be more than 2 mb";
+                exit;
+            }
+       //     echo $tmp_file.'=='.$original; exit();
+            if (!move_uploaded_file($tmp_file, $original)) {
+                echo $Messages = "File not uploaded";
+                exit;
+            } 
+//            else {
 //                createthumb($original, $path . '30/' . $image, 30, 30);
 //                //createthumb($original, $path.'80/'.$not_type_icon,80,80);
 //            }
-//        }
-//        return $image;
-//    }
+        }
+        return $image;
+    }
 //
-//    $profileimage = $_FILES['image']['name'];
-////    $hdn_image = $_POST['hdn_image'];
-//    $image = ProcessedImage($profileimage, "image");
-    $image = 'download.jpg';
-
-    $dbfunction->SelectQuery("tbl_product", "product_name", "product_name ='$prod_name' AND is_deleted='0'");
+    $profileimage = $_FILES['product']['name'];
+    $hdn_image = $_POST['hdn_image'];
+    $image = ProcessedImage($profileimage, "product");
+    
+    $id = $converter->decode($_GET['id']);
+    $dbfunction->SelectQuery("tbl_product", "product_name", "product_name ='$prod_name' AND is_deleted='0' AND id!=$id");
     $objsel = $dbfunction->getFetchArray();
 
     if ($objsel["product_name"] != "") {
         $error1 = "1";
         $errormessage1 = "Product Name Already Exist";
     } else {
-
-        $id = $converter->decode($_GET['id']);
         $updatearray = array("cat_id" => $category, "product_name" => $prod_name, "address" => $address, "mobile" => $mobile, "image" => $image);
         $dbfunction->UpdateQuery("tbl_product", $updatearray, "id='" . $id . "'");
         $urltoredirect = "product_list.php?suc=" . $converter->encode("1");
@@ -158,7 +159,7 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
 
                                     <div class="col-lg-5">
                                         <div class="checkbox">
-                                            <input class="inputwidth" style="cursor:pointer;" id="image" name="image" type="file"  />
+                                            <input class="inputwidth" style="cursor:pointer;" id="image" name="product" type="file"  />
                                         </div>
                                     </div>
                                 </div>	

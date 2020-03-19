@@ -17,14 +17,14 @@ $query = mysqli_query($dbConn, $sql) or die("tbl_variant.php: get variant");
 <?php
 if (isset($_POST["save"]) && $_POST["save"] != "") {
 
-    $item_name = $_POST["item_name"];
+    $prod_id = $converter->decode($_GET['id']);
     $count = count($_POST['item']);
-
-    $dbfunction->SelectQuery("tbl_item", "tbl_item.item_name", "item_name ='$item_name' AND is_deleted='0'");
+    $item_name = $_POST['item_name'];
+    $dbfunction->SelectQuery("tbl_item", "tbl_item.item_name", "item_name ='$item_name' AND is_deleted='0' AND prod_id=$prod_id");
     $objsel = $dbfunction->getFetchArray();
 
     function ProcessedImage($image, $fieldname) {
-
+       
         global $generalFunction;
         if ($generalFunction->validAttachment($image)) {
             ini_set('max_execution_time', '999999');
@@ -44,11 +44,11 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
                 echo $Messages = "File Size should not be more than 2 mb";
                 exit;
             }
-            //     echo $tmp_file.'=='.$original; exit();
+       //     echo $tmp_file.'=='.$original; exit();
             if (!move_uploaded_file($tmp_file, $original)) {
                 echo $Messages = "File not uploaded";
                 exit;
-            }
+            } 
 //            else {
 //                createthumb($original, $path . '30/' . $image, 30, 30);
 //                //createthumb($original, $path.'80/'.$not_type_icon,80,80);
@@ -56,9 +56,8 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
         }
         return $image;
     }
-
 //
-    $profileimage = $_FILES['image']['name'];+
+    $profileimage = $_FILES['item']['name'];
     $hdn_image = $_POST['hdn_image'];
     $image = ProcessedImage($profileimage, "item");
 
@@ -66,7 +65,7 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
         $error1 = "1";
         $errormessage1 = "Item Name Already Exist";
     } else {
-        $dbfunction->InsertQuery("tbl_item", array("item_name" => $item_name, "item_image" => $image, "create_date" => date('Y-m-d H:i:s')));
+        $dbfunction->InsertQuery("tbl_item", array("item_name" => $_POST['item_name'], "prod_id" => $prod_id, "item_image" => $image, "create_date" => date('Y-m-d H:i:s')));
         $sql = "SELECT id";
         $sql .= " FROM tbl_item ORDER BY id DESC LIMIT 1";
         $query = mysqli_query($dbConn, $sql) or die("tbl_item.php: get item");
@@ -78,7 +77,8 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
             $dbfunction->InsertQuery("tbl_item_size_price", array("item_id" => $last_id, "item_size" => $_REQUEST['item'][$i], "item_price" => $_REQUEST['item_price'][$i], "create_date" => date('Y-m-d H:i:s')));
             $i++;
         }
-        $urltoredirect = "item_list.php?suc=" . $converter->encode("4");
+        $product_id = $converter->encode($prod_id);
+        $urltoredirect = "item_list.php?id=".$product_id."&suc=" . $converter->encode("4");
         $generalFunction->redirect($urltoredirect);
     }
 }
@@ -156,11 +156,11 @@ if (isset($_POST["save"]) && $_POST["save"] != "") {
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-lg-3 control-label" for="image">Item Image:</label>
+                                    <label class="col-lg-3 control-label" for="not_type_icon">Image:</label>
 
                                     <div class="col-lg-5">
                                         <div class="checkbox">
-                                            <input class="inputwidth" style="cursor:pointer;" id="image" name="image" type="file"  />
+                                            <input class="inputwidth" style="cursor:pointer;" id="image" name="item" type="file"  />
                                         </div>
                                     </div>
                                 </div>	

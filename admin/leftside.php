@@ -15,7 +15,7 @@ if ($pagename == "cat_list" || $pagename == "cat_add" || $pagename == "cat_edit"
     $categorycls1 = "";
 }
 
-if ($pagename == "product_list" || $pagename == "product_add" || $pagename == "product_edit") {
+if ($pagename == "product_list" || $pagename == "product_add" || $pagename == "product_edit" || $pagename="item_list") {
     $productcls = " active selected";
     $productcls = " visible";
 } else {
@@ -31,13 +31,13 @@ if ($pagename == "variant_list" || $pagename == "variant_add" || $pagename == "v
     $variantcls = "";
 }
 
-if ($pagename == "item_list" || $pagename == "item_add" || $pagename == "item_edit") {
-    $itemcls = " active selected";
-    $itemcls = " visible";
-} else {
-    $itemcls = "";
-    $itemcls = "";
-}
+//if ($pagename == "item_list" || $pagename == "item_add" || $pagename == "item_edit") {
+//    $itemcls = " active selected";
+//    $itemcls = " visible";
+//} else {
+//    $itemcls = "";
+//    $itemcls = "";
+//}
 
 if ($pagename == "cust_list" || $pagename == "add_cust") {
     $vendorCls = " active selected";
@@ -146,7 +146,7 @@ if ($pagename == "sitesettings" || $pagename == "changepassword") {
             </ul>
         </li>
         
-        <li class="<?php echo $itemcls; ?>">
+<!--        <li class="<?php echo $itemcls; ?>">
             <a href="#fakelink">
                 <i class="fa fa-sitemap icon-sidebar"></i>
                 <i class="fa fa-angle-right chevron-icon-sidebar"></i>
@@ -157,7 +157,7 @@ if ($pagename == "sitesettings" || $pagename == "changepassword") {
                 <li <?php echo (($pagename == "item_add") ? ' class="selected"' : ""); ?>><a href="item_add.php" title="Add Item">Add Item</a></li>
 
             </ul>
-        </li>
+        </li>-->
         
         <li class="<?php echo $vendorCls; ?>">
             <a href="#fakelink">

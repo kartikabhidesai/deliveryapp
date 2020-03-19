@@ -2,11 +2,9 @@
 include("../include/config.inc.php");
 include("session.php");
 $converter = new encryption();
-
 session_regenerate_id(true);
 // a5b9bd37ae7343383976a1b5c90ee3fb 
 $generalFunction = new generalfunction();
-
 $pagename = "item_edit";
 $dbfunction = new dbfunctions();
 
@@ -14,20 +12,26 @@ $sql = "SELECT id, variant_name";
 $sql .= " FROM tbl_variant WHERE is_deleted=0";
 $query = mysqli_query($dbConn, $sql) or die("tbl_variant.php: get variant");
 
+$prod_id = $converter->decode($_GET['prod_id']);
+$id = $converter->decode($_GET['id']);
 $sql1 = "SELECT tbl_item.*, tbl_item_size_price.item_size, tbl_item_size_price.item_price";
-$sql1 .= " FROM tbl_item INNER JOIN tbl_item_size_price ON tbl_item_size_price.item_id=tbl_item.id";
-$query1 = mysqli_query($dbConn, $sql1) or die("tbl_variant.php: get variant");
+$sql1 .= " FROM tbl_item INNER JOIN tbl_item_size_price ON tbl_item_size_price.item_id=tbl_item.id WHERE tbl_item.prod_id=$prod_id AND tbl_item.id=$id";
+$query1 = mysqli_query($dbConn, $sql1) or die("tbl_item.php: get item");
 
 $query2 = mysqli_query($dbConn, $sql1) or die("tbl_variant.php: get variant");
 $row2 = mysqli_fetch_array($query2);
+
+$sql3 = "SELECT *";
+$sql3 .= " FROM tbl_product WHERE id=$prod_id";
+$query3 = mysqli_query($dbConn, $sql3) or die("tbl_product.php: get product");
 ?>
 <?php
 if (isset($_POST["update"]) && $_POST["update"] != "") {
-    
-    $item_name = $_POST["item_name"];
-    $count = count($_POST['item']);
 
-    $dbfunction->SelectQuery("tbl_item", "tbl_item.item_name", "item_name ='$item_name' AND is_deleted='0' AND id!=". $converter->decode($_GET['id']) ."");
+    $item_name = $_POST["item_name"];
+    $prod_id = $_POST["product_id"];
+    $count = count($_POST['item']);
+    $dbfunction->SelectQuery("tbl_item", "tbl_item.item_name", "item_name ='$item_name' AND is_deleted='0' AND prod_id!=$prod_id AND id!=$id");
     $objsel = $dbfunction->getFetchArray();
 
     function ProcessedImage($image, $fieldname) {
@@ -64,9 +68,7 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
         return $image;
     }
 
-//
     $profileimage = $_FILES['item']['name'];
-    
     $hdn_image = $_POST['hdn_image'];
     $image = ProcessedImage($profileimage, "item");
 
@@ -75,20 +77,22 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
         $errormessage1 = "Item Name Already Exist";
     } else {
         $id = $converter->decode($_GET['id']);
-        $dbfunction->UpdateQuery("tbl_item", array("item_name" => $item_name, "item_image" => $image, "upated_date" => date('Y-m-d H:i:s')), "id='" . $id . "'");
-        $sql = "SELECT id";
-        $sql .= " FROM tbl_item ORDER BY id DESC LIMIT 1";
-        $query = mysqli_query($dbConn, $sql) or die("tbl_item.php: get item");
-        while ($row = mysqli_fetch_array($query)) {
-            $last_id = $row['id'];
-        }
+
+        $dbfunction->UpdateQuery("tbl_item", array("item_name" => $item_name, "item_image" => $image, "upated_date" => date('Y-m-d H:i:s')), "id='" . $id . "'AND prod_id='" . $prod_id . "'");
+//        $sql = "SELECT id";
+//        $sql .= " FROM tbl_item ORDER BY id DESC LIMIT 1";
+//        $query = mysqli_query($dbConn, $sql) or die("tbl_item.php: get item");
+//        while ($row = mysqli_fetch_array($query)) {
+//            $last_id = $row['id'];
+//        }
         $i = 0;
-        $dbfunction->DeleteQuery('tbl_item_size_price','item_id='.$id);
+        $dbfunction->DeleteQuery('tbl_item_size_price', 'item_id=' . $id);
         while ($i < $count) {
-            $dbfunction->InsertQuery("tbl_item_size_price", array("item_id" => $last_id, "item_size" => $_REQUEST['item'][$i], "item_price" => $_REQUEST['item_price'][$i], "upated_date" => date('Y-m-d H:i:s')));
+            $dbfunction->InsertQuery("tbl_item_size_price", array("item_id" => $id, "item_size" => $_REQUEST['item'][$i], "item_price" => $_REQUEST['item_price'][$i], "upated_date" => date('Y-m-d H:i:s')));
             $i++;
         }
-        $urltoredirect = "item_list.php?suc=" . $converter->encode("4");
+        $product_id = $converter->encode($prod_id);
+        $urltoredirect = "item_list.php?id=" . $product_id . "&suc=" . $converter->encode("4");
         $generalFunction->redirect($urltoredirect);
     }
 }
@@ -103,18 +107,18 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
     <link rel="shortcut icon" type="image/x-con" href="images/Logo1.ico" />
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
-    <?php include("js-css-head.php"); ?>
-    <?php include("meta-settings.php"); ?>
+<?php include("js-css-head.php"); ?>
+<?php include("meta-settings.php"); ?>
 
     <script language=javascript></script><script language=javascript></script>
 </head>
 <body onLoad="document.getElementById('st').focus();">
     <div class="container-fluid fluid menu-left">
-        <?php include("header.php"); ?>
+<?php include("header.php"); ?>
         <!-- Sidebar menu & content wrapper -->
         <div id="wrapper">     
             <!-- Sidebar Menu -->
-            <?php include("leftside.php"); ?>
+<?php include("leftside.php"); ?>
             <!-- // Sidebar Menu END -->
             <!-- BEGIN PAGE CONTENT -->
             <div class="page-content">
@@ -139,6 +143,16 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
                         <form  id="addCat" class="form-horizontal" enctype="multipart/form-data" name="addCat"  action="<?php echo $pageurl; ?>" method="post">
                             <fieldset>
                                 <div class="form-group">
+                                    <label class="col-lg-3 control-label">Product Name:</label>
+                                    <div class="col-lg-5">
+                                        <?php while ($product = mysqli_fetch_array($query3)) { ?>
+                                            <input type="text" class="form-control" name="item_name" value="<?php echo $product['product_name']; ?>" placeholder="Enter Item Name" required readonly/>
+<?php } ?>
+                                    </div>
+                                    <span class="errorstar">&nbsp;*</span>
+                                </div>
+                                <input type="hidden" name="product_id" value="<?php echo $prod_id; ?>"/>
+                                <div class="form-group">
                                     <label class="col-lg-3 control-label">Item Name:</label>
                                     <div class="col-lg-5">
                                         <input type="text" class="form-control" name="item_name" value="<?php echo $row2['item_name']; ?>" placeholder="Enter Item Name" required />
@@ -149,27 +163,28 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
                                 <div class="form-group">
                                     <label class="col-lg-3 control-label">Item Size:</label>
                                     <div class="col-lg-5">
-                                        <?php while ($row = mysqli_fetch_array($query)) {?>
+                                                <?php while ($row = mysqli_fetch_array($query)) { ?>
                                             <div class="row">
                                                 <div class="col-lg-3">
-                                                    <?php $row1 = mysqli_fetch_array($query1); if(in_array($row['id'],$row1)) { ?>
-                                                    <input type='checkbox'  value='<?php echo $row1['item_size']; ?>' class='item_seleteded' id="item_<?php echo $row['id']; ?>" name="item[]" value="<?php echo $row['id']; ?>" onclick="item_selected(<?php echo $row['id']; ?>)" <?php  echo 'checked="checked"'; ?>/>
-                                                    <?php }else{ ?>
+                                                    <?php $row1 = mysqli_fetch_array($query1);
+                                                    if (in_array($row['id'], $row1)) { ?>
+                                                        <input type='checkbox'  value='<?php echo $row1['item_size']; ?>' class='item_seleteded' id="item_<?php echo $row['id']; ?>" name="item[]" value="<?php echo $row['id']; ?>" onclick="item_selected(<?php echo $row['id']; ?>)" <?php echo 'checked="checked"'; ?>/>
+    <?php } else { ?>
                                                         <input type='checkbox' value='<?php echo $row1['item_size']; ?>'  class='item_seleteded' id="item_<?php echo $row['id']; ?>" name="item[]" value="<?php echo $row['id']; ?>" onclick="item_selected(<?php echo $row['id']; ?>)"/>
                                                     <?php } ?>
                                                     <span><?php echo $row['variant_name']; ?></span>
                                                 </div>
                                                 <div class="col-lg-9">
-                                                    <?php if(in_array($row['id'],$row1)) { ?>
-                                                    <input type="text" class="form-control textbox" id="item_price_<?php echo $row['id']; ?>" name="item_price[]" value="<?php echo $row1['item_price']; ?>" placeholder="Enter Price" required />
-                                                    <?php }else{ ?>
-                                                    <input type="text" class="form-control textbox" id="item_price_<?php echo $row['id']; ?>" name="item_price[]" value="" placeholder="Enter Price" required  disabled="disabled"/>
-                                                    <?php } ?>
+                                                    <?php if (in_array($row['id'], $row1)) { ?>
+                                                        <input type="text" class="form-control textbox" id="item_price_<?php echo $row['id']; ?>" name="item_price[]" value="<?php echo $row1['item_price']; ?>" placeholder="Enter Price" required />
+    <?php } else { ?>
+                                                        <input type="text" class="form-control textbox" id="item_price_<?php echo $row['id']; ?>" name="item_price[]" value="" placeholder="Enter Price" required  disabled="disabled"/>
+    <?php } ?>
                                                 </div>
-                                                    
+
                                             </div>
                                             <br>
-                                            <?php } ?>
+<?php } ?>
                                     </div>
                                     <span class="errorstar">&nbsp;*</span>
                                 </div>
@@ -179,21 +194,21 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
 
                                     <div class="col-lg-5">
                                         <div class="checkbox">
-                                            <input class="inputwidth" style="cursor:pointer;" id="image" name="image" type="file"  />
+                                            <input class="inputwidth" style="cursor:pointer;" id="image" name="item" type="file"  />
                                         </div>
                                     </div>
                                 </div>	
-                                
+
                                 <div class="form-group">
                                     <label class="col-lg-3 control-label" for="image">Old Image:</label>
 
                                     <div class="col-lg-5">
                                         <div class="checkbox">
-                                            <span style="margin-left:10px"><img src="../uploads/item/<?php echo $row2['image_image'] ?>" width="100" height="100" /></span>
+                                            <span style="margin-left:10px"><img src="../uploads/item/<?php echo $row2['item_image'] ?>" width="100" height="100" /></span>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Form actions -->
                                 <div class="form-group">
                                     <div class="col-lg-9 col-lg-offset-3">
@@ -208,7 +223,7 @@ if (isset($_POST["update"]) && $_POST["update"] != "") {
                     </div>
                 </div><!-- /.container-fluid -->
                 <!-- BEGIN FOOTER -->
-                <?php include_once("footer.php"); ?>
+<?php include_once("footer.php"); ?>
                 <!-- END FOOTER -->
             </div><!-- /.page-content -->
         </div><!-- /.wrapper -->

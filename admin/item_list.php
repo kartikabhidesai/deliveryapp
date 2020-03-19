@@ -3,9 +3,11 @@ include("../include/config.inc.php");
 include("session.php");
 
 session_regenerate_id(true);
+$converter = new encryption();
 // a5b9bd37ae7343383976a1b5c90ee3fb 
 $generalFunction = new generalfunction();
-
+$prod_id = $converter->decode($_GET['id']);
+$additem = "item_add.php" . $urltoadd . ($urltoadd != "" ? "&id=" . $converter->encode($prod_id) : "?id=" . $converter->encode($prod_id));
 $pagename = "item_list";
 $dbfunction = new dbfunctions();
 ?>
@@ -40,7 +42,7 @@ $dbfunction = new dbfunctions();
                     <!-- Begin page heading -->
                     <h1 class="page-heading">Item List <small></small></h1>
                     <!-- End page heading -->
-                    <span class="pull-right" ><a href="item_add.php" class="btn btn-icon btn-primary glyphicons" title="Add Item"><i class="icon-plus-sign"></i>Add Item</a></span>
+                    <span class="pull-right" ><a href="<?php echo $additem; ?>" class="btn btn-icon btn-primary glyphicons" title="Add Item"><i class="icon-plus-sign"></i>Add Item</a></span>
                     <!-- Begin breadcrumb -->
                     <ol class="breadcrumb default square rsaquo sm">
                         <li><a href="dashboard.php"><i class="fa fa-home"></i></a></li>
@@ -116,7 +118,7 @@ $dbfunction = new dbfunctions();
 </body>
 <!--Code for POPUP Dialog Box-->
 <script>
-    var gridUrl = "item_grid.php";
+    var gridUrl = "item_grid.php?id=<?php echo $_GET['id'] ?>";
     var viewUrl = "item_view.php";
     var actionUrl = "item_action.php";
     var targetsCols = [0, 4, 5];
